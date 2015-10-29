@@ -14,6 +14,9 @@ namespace MovieTrailers.DataAccess.OMDB
 {
     class OMDBService : IMovieDataAccess
     {
+        //IMDB embedded  video
+        //<iframe src="http://www.imdb.com/video/wab/vi3065290777/imdb/embed?autoplay=false&width=480" width="480" height="270" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
+
         private Uri baseAddress = new Uri("http://www.omdbapi.com/?r=xml");
 
         private IIdGenerator _idGenerator;
@@ -22,7 +25,7 @@ namespace MovieTrailers.DataAccess.OMDB
             _idGenerator = idGenerator;
         }
 
-        public async Task<IEnumerable<Movie>> Search(SearchQuery q)
+        public async Task<IEnumerable<Movie>> Search(SearchRequest q)
         {
             var response = await RequestSearchResult(q.Query);
             var searchResult = await ParseResponse(response);

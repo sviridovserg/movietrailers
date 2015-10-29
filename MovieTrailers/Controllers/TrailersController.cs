@@ -18,7 +18,7 @@ namespace MovieTrailers.Controllers
             _movieService = movieService;
         }
 
-        public async Task<IEnumerable<Movie>> Search(SearchQuery query)
+        public async Task<IEnumerable<Movie>> Search(SearchRequest query)
         {
             return await _movieService.Search(query);
         }

@@ -14,24 +14,35 @@ namespace MovieTrailers.DataAccess.Youtube
 {
     class YoutubeService : IMovieDataAccess
     {
+        //Youtube embedded video
+        //<iframe id="ytplayer" type="text/html" width="640" height="390"  src="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"  frameborder="0"/>
         private IIdGenerator _idGenerator;
         public YoutubeService(IIdGenerator idGenerator) 
         {
             _idGenerator = idGenerator;
         }
 
-        public async Task<IEnumerable<Movie>> Search(SearchQuery q)
+        public async Task<IEnumerable<Movie>> Search(SearchRequest q)
         {
             var youtubeService = CreateService();
 
             var searchListRequest = youtubeService.Search.List("snippet");
-            searchListRequest.Q = q.Query;
+            searchListRequest.Q = GetTrailersQuery(q.Query);
             searchListRequest.MaxResults = q.PageSize;
             searchListRequest.Type = "video";
 
             var searchResult = await searchListRequest.ExecuteAsync();
 
             return searchResult.Items.Select(Convert);
+        }
+
+        private string GetTrailersQuery(string query) 
+        {
+            if (query.Contains("trailer"))
+            {
+                return query;
+            }
+            return query + " trailer";
         }
 
         private Movie Convert(SearchResult result)

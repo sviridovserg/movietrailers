@@ -17,7 +17,7 @@ namespace MovieTrailers.Services
             _dataServices = dataServices;
         }
 
-        public async Task<IEnumerable<Movie>> Search(SearchQuery q)
+        public async Task<SearchResponse> Search(SearchRequest q)
         {
             List<Movie> result = new List<Movie>();
             foreach (var dataService in _dataServices) 
@@ -25,7 +25,11 @@ namespace MovieTrailers.Services
                 result.AddRange(await dataService.Search(q));
             }
 
-            return result;
+            return new SearchResponse()
+            {
+                Movies = result,
+                PageIndex = q.PageIndex
+            };
         }
     }
 }

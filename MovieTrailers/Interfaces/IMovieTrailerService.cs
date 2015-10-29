@@ -9,6 +9,6 @@ namespace MovieTrailers.Interfaces
 {
     public interface IMovieTrailerService
     {
-        Task<IEnumerable<Movie>> Search(SearchQuery q);
+        Task<SearchResponse> Search(SearchRequest q);
     }
 }
