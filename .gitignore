@@ -1,0 +1,13 @@
+scripts
+/MovieTrailers/bin
+/MovieTrailers/obj
+/MovieTrailers/MovieTrailers.csproj.user
+.tmp
+bin
+obj
+bower_components
+node_modules
+packages
+TestResults
+/MovieTrailers.v11.suo
+dist

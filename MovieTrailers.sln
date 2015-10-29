@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTrailers.Tests", "MovieTrailers.Tests\MovieTrailers.Tests.csproj", "{C39EED05-34A6-485F-9906-14B27A341F8A}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MovieTrailers.Client", "MovieTrailers.Client\", "{452F5843-3A78-4403-80A2-F5224466F8F2}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/MovieTrailers.Client"
+		Debug.AspNetCompiler.PhysicalPath = "MovieTrailers.Client\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\MovieTrailers.Client\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/MovieTrailers.Client"
+		Release.AspNetCompiler.PhysicalPath = "MovieTrailers.Client\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\MovieTrailers.Client\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "33752"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MovieTrailers", "MovieTrailers\MovieTrailers.csproj", "{D375550A-423B-4E7A-B6E5-02BF107559A8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C39EED05-34A6-485F-9906-14B27A341F8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C39EED05-34A6-485F-9906-14B27A341F8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C39EED05-34A6-485F-9906-14B27A341F8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C39EED05-34A6-485F-9906-14B27A341F8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{452F5843-3A78-4403-80A2-F5224466F8F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{452F5843-3A78-4403-80A2-F5224466F8F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{452F5843-3A78-4403-80A2-F5224466F8F2}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{452F5843-3A78-4403-80A2-F5224466F8F2}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{D375550A-423B-4E7A-B6E5-02BF107559A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D375550A-423B-4E7A-B6E5-02BF107559A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D375550A-423B-4E7A-B6E5-02BF107559A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D375550A-423B-4E7A-B6E5-02BF107559A8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+	EndGlobalSection
+EndGlobal
