@@ -2,6 +2,9 @@ using System.Web.Http;
 using Microsoft.Practices.Unity;
 using MovieTrailers.Interfaces;
 using MovieTrailers.Services;
+using MovieTrailers.DataAccess.Interfaces;
+using MovieTrailers.DataAccess.Youtube;
+using MovieTrailers.DataAccess.OMDB;
 
 namespace MovieTrailers
 {
@@ -18,8 +21,9 @@ namespace MovieTrailers
         {
             var container = new UnityContainer();
 
-            container.RegisterType<IMovieTrailerService, YoutubeService>();     
-
+            container.RegisterType<IMovieDataAccess, YoutubeService>("YoutubeService");
+            container.RegisterType<IMovieDataAccess, OMDBService>("OMDBService");     
+            container.RegisterInstance<IMovieTrailerService>(new MovieTrailerService(container.ResolveAll<IMovieDataAccess>()));
             return container;
         }
     }

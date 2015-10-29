@@ -8,11 +8,18 @@ using Google.Apis.YouTube.v3;
 using Google.Apis.YouTube.v3.Data;
 using MovieTrailers.Interfaces;
 using MovieTrailers.Models;
+using MovieTrailers.DataAccess.Interfaces;
 
-namespace MovieTrailers.Services
+namespace MovieTrailers.DataAccess.Youtube
 {
-    public class YoutubeService: IMovieTrailerService
+    class YoutubeService : IMovieDataAccess
     {
+        private IIdGenerator _idGenerator;
+        public YoutubeService(IIdGenerator idGenerator) 
+        {
+            _idGenerator = idGenerator;
+        }
+
         public async Task<IEnumerable<Movie>> Search(SearchQuery q)
         {
             var youtubeService = CreateService();
@@ -31,7 +38,8 @@ namespace MovieTrailers.Services
         {
             return new Movie()
             {
-                Id = result.Id.VideoId,
+                Id = _idGenerator.GetId(),
+                SourceId = result.Id.VideoId,
                 CoverUrl = result.Snippet.Thumbnails.Default__.Url,
                 Title = result.Snippet.Title,
             };
