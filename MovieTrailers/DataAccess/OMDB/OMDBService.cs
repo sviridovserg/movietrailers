@@ -9,6 +9,7 @@ using System.Net.Http;
 using System.Xml;
 using System.Xml.Linq;
 using MovieTrailers.DataAccess.Interfaces;
+using System.Web.Caching;
 
 namespace MovieTrailers.DataAccess.OMDB
 {
@@ -17,30 +18,43 @@ namespace MovieTrailers.DataAccess.OMDB
         //IMDB embedded  video
         //<iframe src="http://www.imdb.com/video/wab/vi3065290777/imdb/embed?autoplay=false&width=480" width="480" height="270" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
 
-        private Uri baseAddress = new Uri("http://www.omdbapi.com/?r=xml");
 
         private IIdGenerator _idGenerator;
-        public OMDBService(IIdGenerator idGenerator) 
+        private IAppCache _appCache;
+        private static string _cahcePrefix = "omdb";
+
+        public OMDBService(IIdGenerator idGenerator, IAppCache appCache) 
         {
             _idGenerator = idGenerator;
+            _appCache = appCache;
         }
 
         public async Task<IEnumerable<Movie>> Search(SearchRequest q)
         {
-            var response = await RequestSearchResult(q.Query);
-            var searchResult = await ParseResponse(response);
-            return searchResult;
+            IEnumerable<Movie> searchResult = _appCache.Get(GetCacheKey(q.Query)) as IEnumerable<Movie>;
+            if (searchResult == null)
+            {
+                var response = await RequestSearchResult(q.Query);
+                searchResult = await ParseResponse(response);
+                _appCache.Put(GetCacheKey(q.Query), searchResult);
+            }
+            return searchResult.Skip(q.PageSize * q.PageIndex).Take(q.PageSize);
+        }
+
+        private string GetCacheKey(string q)
+        {
+            return _cahcePrefix + q;
         }
 
         private async Task<string> RequestSearchResult(string query)
         {
             var result = String.Empty;
-            using (var httpClient = new HttpClient { BaseAddress = baseAddress })
+            using (var httpClient = new HttpClient {  })
             {
 
                 httpClient.DefaultRequestHeaders.TryAddWithoutValidation("accept", "application/xml");
 
-                using (var response = await httpClient.GetAsync("&type=movie&s=" + Uri.EscapeDataString(query)))
+                using (var response = await httpClient.GetAsync("http://www.omdbapi.com/?r=xml&type=movie&s=" + Uri.EscapeDataString(query)))
                 {
                     result = await response.Content.ReadAsStringAsync();
                 }
@@ -63,8 +77,9 @@ namespace MovieTrailers.DataAccess.OMDB
                     var movie = new Movie();
                     movie.Id = _idGenerator.GetId();
                     movie.SourceId = node.Attributes["imdbID"].Value;
-                    movie.Title = node.Attributes["imdbID"].Value;
-                    movie.CoverUrl = node.Attributes["Poster"].Value;
+                    movie.Title = node.Attributes["Title"].Value;
+                    movie.CoverUrl = node.Attributes["Poster"] == null ? string.Empty : node.Attributes["Poster"].Value;
+                    movie.Source = Models.Source.OMDB;
                     int releaseYear;
                     if (int.TryParse(node.Attributes["Year"].Value, out releaseYear))
                     {

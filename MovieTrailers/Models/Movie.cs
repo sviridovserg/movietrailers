@@ -19,6 +19,8 @@ namespace MovieTrailers.Models
 
         public string SourceId { get; set; }
 
+        public Source Source { get; set; }
+
         public string Id { get; set; }
 
         public string Title { get; set; }

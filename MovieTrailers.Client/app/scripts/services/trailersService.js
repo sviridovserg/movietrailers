@@ -11,7 +11,7 @@
     function search(query) {
         return $http.post(appConfig.serviceUrl+"/Search", { Query: query, PageSize: 20 }).then(
             function (response) {
-                return _.map(response.data, convertItem);
+                return _.map(response.data.Movies, convertItem);
             });
     }
 

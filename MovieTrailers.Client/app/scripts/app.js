@@ -2,9 +2,9 @@
 
 /**
  * @ngdoc overview
- * @name designerWorkplaceApp
+ * @name movieTrailesApp
  * @description
- * # designerWorkplaceApp
+ * # movieTrailesApp
  *
  * Main module of the application.
  */
