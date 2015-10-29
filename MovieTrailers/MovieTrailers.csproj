@@ -163,14 +163,19 @@
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Controllers\TrailersController.cs" />
+    <Compile Include="DataAccess\Interfaces\IMovieDataAccess.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="DataAccess\Interfaces\IIdGenerator.cs" />
     <Compile Include="Interfaces\IMovieTrailerService.cs" />
     <Compile Include="Models\Movie.cs" />
     <Compile Include="Models\SearchQuery.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\YoutubeService.cs" />
+    <Compile Include="DataAccess\IdGenerator.cs" />
+    <Compile Include="Services\MovieTrailerService.cs" />
+    <Compile Include="DataAccess\OMDB\OMDBService.cs" />
+    <Compile Include="DataAccess\Youtube\YoutubeService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\FilterConfig.cs" />

@@ -5,13 +5,19 @@ using System.Web;
 
 namespace MovieTrailers.Models
 {
+    public enum Source 
+    {
+        Youtube,
+        OMDB
+    }
+
     public class Movie
     {
         public Movie()
         {
         }
 
-        public string CacheId { get; set; }
+        public string SourceId { get; set; }
 
         public string Id { get; set; }
 
@@ -19,11 +25,11 @@ namespace MovieTrailers.Models
 
         public int? ReleaseYear { get; set; }
 
-        public string Genre { get; set; }
+        //public string Genre { get; set; }
 
-        public int Rating { get; set; }
+        //public int Rating { get; set; }
 
-        public string Classification { get; set; }
+        //public string Classification { get; set; }
 
         public string CoverUrl { get; set; }
 
@@ -39,16 +45,16 @@ namespace MovieTrailers.Models
                 return false;
             }
 
-            return Id == obj.Id && Title == obj.Title && ReleaseYear == obj.ReleaseYear && Genre == obj.Genre &&
+            return Id == obj.Id && Title == obj.Title && ReleaseYear == obj.ReleaseYear /*&& Genre == obj.Genre &&
                    Rating == obj.Rating &&
-                   Classification == obj.Classification;
+                   Classification == obj.Classification*/;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode() ^ Title.GetHashCode() ^ ReleaseYear.GetHashCode() ^ Genre.GetHashCode() ^
+            return Id.GetHashCode() ^ Title.GetHashCode() ^ ReleaseYear.GetHashCode() /*^ Genre.GetHashCode() ^
                    Rating.GetHashCode() ^
-                   Classification.GetHashCode();
+                   Classification.GetHashCode()*/;
         }
 
     }

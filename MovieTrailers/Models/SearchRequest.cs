@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MovieTrailers.Models
 {
-    public class SearchQuery
+    public class SearchRequest
     {
         public string Query { get; set; }
         public int PageIndex { get; set; }
