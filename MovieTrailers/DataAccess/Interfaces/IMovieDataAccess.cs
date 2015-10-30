@@ -9,6 +9,6 @@ namespace MovieTrailers.DataAccess.Interfaces
 {
     public interface IMovieDataAccess
     {
-        Task<IEnumerable<Movie>> Search(SearchRequest q);
+        Task<DataSearchResponse> Search(DataSearchRequest q, int count);
     }
 }

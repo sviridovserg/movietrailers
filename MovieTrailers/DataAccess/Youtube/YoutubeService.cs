@@ -17,14 +17,19 @@ namespace MovieTrailers.DataAccess.Youtube
         private class CacheInfo 
         {
             public List<Movie> Movies { get; set; }
+            public int TotalResults { get; set; }
             public string NextPageToken { get; set; }
         }
+        private const string CAHCE_PREFIX = "youtube";
+        //The restriction of youtube service for pagesize is [4, 50]
+        private const int PAGE_SIZE = 50;
+
 
         //Youtube embedded video
         //<iframe id="ytplayer" type="text/html" width="640" height="390"  src="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"  frameborder="0"/>
         private IIdGenerator _idGenerator;
         private IAppCache _appCache;
-        private static string _cachePrefix = "youtube";
+        
 
         public YoutubeService(IIdGenerator idGenerator, IAppCache appCache) 
         {
@@ -32,44 +37,75 @@ namespace MovieTrailers.DataAccess.Youtube
             _appCache = appCache;
         }
 
-        public async Task<IEnumerable<Movie>> Search(SearchRequest q)
+        public async Task<DataSearchResponse> Search(DataSearchRequest q, int count)
+        {
+            IEnumerable<Movie> allLoadedMovies = GetCachedMovies(q);
+            if (allLoadedMovies.Count() < count)
+            {
+                await RequestSearch(q, count);
+                allLoadedMovies = GetCachedMovies(q);
+            }
+            return new DataSearchResponse() { Movies = allLoadedMovies.Take(count), TotalResults = GetTotalResults(q) };
+        }
+
+        private async Task RequestSearch(DataSearchRequest q, int count)
+        {
+            var loadedMoviesCount = GetCachedMovies(q).Count();
+
+            int needToLoadPageCount = System.Convert.ToInt32(Math.Ceiling(((double)count - loadedMoviesCount) / PAGE_SIZE));
+
+            var youtubeService = CreateService();
+            for (int i = 0; i < needToLoadPageCount; i++)
+            {
+                var searchListRequest = youtubeService.Search.List("snippet");
+                searchListRequest.Q = GetTrailersQuery(q.Query);
+                searchListRequest.MaxResults = PAGE_SIZE;
+                searchListRequest.Type = "video";
+                searchListRequest.PageToken = GetNextPageToken(q);
+                var searchResult = await searchListRequest.ExecuteAsync();
+                var movies = searchResult.Items.Select(Convert);
+                AddMoviesToCache(q.Query, movies, searchResult.PageInfo.TotalResults.GetValueOrDefault(0) , searchResult.NextPageToken);
+            }
+        }
+
+        private IEnumerable<Movie> GetCachedMovies(DataSearchRequest q)
         {
             CacheInfo cachedResult = _appCache.Get(GetCacheKey(q.Query)) as CacheInfo;
-            string nextPageToken = string.Empty;
-            if (cachedResult != null)
+            if (cachedResult == null)
             {
-                if (cachedResult.Movies.Count >= (q.PageIndex + 1) * q.PageSize)
-                {
-                    return cachedResult.Movies.Skip(q.PageIndex * q.PageSize).Take(q.PageSize);
-                }
-                else 
-                {
-                    nextPageToken = cachedResult.NextPageToken;
-                }
-                
+                return new List<Movie>();
             }
-            var youtubeService = CreateService();
-            var searchListRequest = youtubeService.Search.List("snippet");
-            searchListRequest.Q = GetTrailersQuery(q.Query);
-            searchListRequest.MaxResults = q.PageSize;
-            searchListRequest.Type = "video";
-            searchListRequest.PageToken = nextPageToken;
+            return cachedResult.Movies;
+        }
 
-            var searchResult = await searchListRequest.ExecuteAsync();
+        private string GetNextPageToken(DataSearchRequest q)
+        {
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q.Query)) as CacheInfo;
+            return cachedResult == null ? string.Empty : cachedResult.NextPageToken;
+        }
 
-            var movies = searchResult.Items.Select(Convert);
+        private int GetTotalResults(DataSearchRequest q) 
+        {
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q.Query)) as CacheInfo;
+            return cachedResult == null ? 0 : cachedResult.TotalResults;
+        }
+
+        private void AddMoviesToCache(string query, IEnumerable<Movie> movieList, int totalResults, string nextPageToken)
+        {
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(query)) as CacheInfo;
             if (cachedResult == null) 
             {
                 cachedResult = new CacheInfo() { Movies = new List<Movie>() };
             }
-            cachedResult.NextPageToken = searchResult.NextPageToken;
-            cachedResult.Movies.AddRange(movies);
-            return cachedResult.Movies.Skip(q.PageIndex * q.PageSize).Take(q.PageSize);
+            cachedResult.NextPageToken = nextPageToken;
+            cachedResult.TotalResults = totalResults;
+            cachedResult.Movies.AddRange(movieList);
+            _appCache.Put(GetCacheKey(query), cachedResult);
         }
 
         private string GetCacheKey(string q) 
         {
-            return _cachePrefix + q;
+            return CAHCE_PREFIX + q;
         }
 
         private string GetTrailersQuery(string query) 

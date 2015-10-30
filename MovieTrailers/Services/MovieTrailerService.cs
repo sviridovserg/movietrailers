@@ -22,17 +22,44 @@ namespace MovieTrailers.Services
 
         public async Task<SearchResponse> Search(SearchRequest q)
         {
-            List<Movie> result = new List<Movie>();
+            List<IEnumerable<Movie>> result = new List<IEnumerable<Movie>>();
+            int totalCount = 0;
             foreach (var dataService in _dataServices) 
             {
-                result.AddRange(await dataService.Search(q));
+                var searchRes = await dataService.Search(q, (q.PageIndex + 1) * q.PageSize);
+                result.Add(searchRes.Movies);
+                totalCount += searchRes.TotalResults;
             }
-
+                
             return new SearchResponse()
             {
-                Movies = result,
-                PageIndex = q.PageIndex
+                Movies = GetPage(q.PageIndex, q.PageSize, result),
+                TotalResults = totalCount
             };
+        }
+
+        public IEnumerable<Movie> GetPage(int pageIndex, int pageSize, List<IEnumerable<Movie>> searchResults)
+        {
+            int mergeBucketSize = Convert.ToInt32(Math.Ceiling((double)pageSize / searchResults.Count));
+            List<Movie> result = new List<Movie>();
+            bool hasDataToProcess = true;
+            int processedItems = 0;
+            while (hasDataToProcess) 
+            {
+                bool processedAnything = false;
+                for (int i = 0; i < searchResults.Count; i++)
+                {
+                    var bucket = searchResults[i].Skip(processedItems).Take(mergeBucketSize);
+                    if (bucket.Count() > 0)
+                    {
+                        processedAnything = true;
+                        result.AddRange(bucket);
+                    }
+                }
+                processedItems += mergeBucketSize;
+                hasDataToProcess = processedAnything;
+            }
+            return result.Skip(pageIndex * pageSize).Take(pageSize);
         }
     }
 }

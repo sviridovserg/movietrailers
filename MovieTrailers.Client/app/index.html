@@ -43,26 +43,44 @@
 
             
             <md-content class="md-padding move-list">
-                    <md-whiteframe ng-repeat="i in searchResult" class="md-whiteframe-3dp md-margin md-padding" layout layout-align="left center">
+                    <!--<md-whiteframe ng-repeat="i in searchResult" class="md-whiteframe-3dp md-margin md-padding" layout layout-align="left center">
                         <div layout="row">
                             <img ng-src="{{i.coverUrl}}" alt="cover" style="height:100px" class="md-avatar">
                         <span>{{i.title}}</span>
                     </div>
-                    </md-whiteframe>
+                    </md-whiteframe>-->
                             
+                <md-grid-list md-cols="5" md-cols-sm="1" md-cols-md="2" md-cols-gt-md="3" md-cols-lg="4" md-cols-gt-lg="6"
+                              md-row-height-gt-md="4:3" md-row-height="16:9"
+                              md-gutter="8px" md-gutter-gt-sm="4px">
+                    <md-grid-tile ng-repeat="m in searchResult" ng-click="openVideo(m)" class="movie-list-item"
+                                  md-rowspan="1"
+                                  md-colspan="1"
+                                  md-colspan-sm="1">
+                        <div class="movie-list-item-cover-container">
+                            <img ng-src="{{m.coverUrl}}" alt="cover" class="movie-list-item-cover" class="movie-list-item-cover">
+                            <div class="movie-list-item-play">
+                                <md-icon md-font-set="material-icons">play_circle_outline</md-icon>
+                            </div>
+
+                        </div>
+
+                        <md-grid-tile-footer><h3>{{m.title}}</h3></md-grid-tile-footer>
+                    </md-grid-tile>
+                </md-grid-list>
             </md-content>
                     
-            <div layout="row" class="paging-container">
-                <div flex></div>
-                <div>
-                    <md-button ng-click="search(query)"  class="md-fab md-primary  md-mini" aria-label="Previous" title="Previous">
-                        <md-icon md-font-set="material-icons">keyboard_arrow_left</md-icon>
-                    </md-button>
-                    <md-button ng-click="search(query)"  class="md-fab md-primary md-mini" aria-label="Next" title="Next">
-                        <md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon>
-                    </md-button>
-                </div>
-            </div>
+          <div layout="row" class="paging-container" ng-if="searchResult.length <= totalResult">
+              <div flex></div>
+              <div>
+                  <md-button ng-click="prevPage()" ng-disabled="currentPage == 0" class="md-fab md-primary  md-mini" aria-label="Previous" title="Previous">
+                      <md-icon md-font-set="material-icons">keyboard_arrow_left</md-icon>
+                  </md-button>
+                  <md-button ng-click="nextPage()" ng-disabled="currentPage == getLastPageIndex()" class="md-fab md-primary md-mini" aria-label="Next" title="Next">
+                      <md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon>
+                  </md-button>
+              </div>
+          </div>
                 
 
 
@@ -77,13 +95,15 @@
     
     <!-- endbuild -->
 
-        <!-- build:js({.tmp,app}) scripts/scripts.js -->
-        <script src="scripts/app.js"></script>
+    <!-- build:js({.tmp,app}) scripts/scripts.js -->
+    <script src="scripts/app.js"></script>
+
+    <script src="scripts/controllers/main.js"></script>
+    <script src="scripts/controllers/showTrailer.js"></script>
+
+    <script src="scripts/services/notificationService.js"></script>
+    <script src="scripts/services/trailersService.js"></script>
       
-        <script src="scripts/controllers/main.js"></script>
-      
-      <script src="scripts/services/trailersService.js"></script>
-      
-        <!-- endbuild -->
+    <!-- endbuild -->
 </body>
 </html>

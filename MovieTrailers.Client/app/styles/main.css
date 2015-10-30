@@ -9,13 +9,6 @@ body {
   padding: 0;
 }
 
-/* Responsive: Portrait tablets and up */
-@media screen and (min-width: 768px) {
-  .container {
-    max-width: 730px;
-  }
-
-}
 
 .app {
     
@@ -43,5 +36,98 @@ body {
     height:52px;
     bottom:0px;
     right: 0px;
-        left: 0px;
+    left: 0px;
+}
+
+.app .md-error-toast-theme  {
+     background: #ff8a80;
+}
+
+.app .movie-list-item-cover-container {
+    position:relative;
+}
+
+.app .movie-list-item-cover-container {
+    align-self:flex-start;
+    margin-top: 10px;
+}
+
+.app .movie-list-item-cover {
+    height:160px;
+}
+
+.app .movie-list-item:hover .movie-list-item-play {
+    display:flex;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    cursor:pointer;
+}
+
+.app .movie-list-item-play {
+    position: absolute;
+    padding: 0;
+    margin: 0;
+    top:0px;
+    bottom:0px;
+    left: 0px;
+    right: 0px;
+    background: #FFF;
+    opacity:0.5;
+    display:none;
+}
+
+    .app .movie-list-item-play .material-icons {
+        font-size: 60px;
+        width: 60px;
+        height: 60px;
+    }
+
+/* Responsive: Portrait tablets and up */
+@media screen and (min-width: 768px) {
+  .container {
+    max-width: 730px;
+  }
+
+}
+
+/*@media screen and (min-width: 900px) {
+    .app .movie-list-item-cover {
+        height: 120px;
+         margin-top: 3px;
+    }
+}*/
+
+@media screen and (min-width: 1200px) {
+    .app .movie-list-item-cover {
+        height: 120px;
+    }
+
+    .app .movie-list-item-cover-container {
+        margin-top: 5px;
+    }
+}
+
+@media screen and (min-width: 1600px) {
+    .app .movie-list-item-cover {
+        height: 140px;
+    }
+    .app .movie-list-item-cover-container {
+        margin-top: 5px;
+    }
+}
+
+@media screen and (min-width: 1800px) {
+    .app .movie-list-item-cover {
+        height: 160px;
+    }
+    .app .movie-list-item-cover-container {
+        margin-top: 5px;
+    }
 }

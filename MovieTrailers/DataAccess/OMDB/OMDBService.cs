@@ -29,7 +29,7 @@ namespace MovieTrailers.DataAccess.OMDB
             _appCache = appCache;
         }
 
-        public async Task<IEnumerable<Movie>> Search(SearchRequest q)
+        public async Task<DataSearchResponse> Search(DataSearchRequest q, int count)
         {
             IEnumerable<Movie> searchResult = _appCache.Get(GetCacheKey(q.Query)) as IEnumerable<Movie>;
             if (searchResult == null)
@@ -38,7 +38,7 @@ namespace MovieTrailers.DataAccess.OMDB
                 searchResult = await ParseResponse(response);
                 _appCache.Put(GetCacheKey(q.Query), searchResult);
             }
-            return searchResult.Skip(q.PageSize * q.PageIndex).Take(q.PageSize);
+            return new DataSearchResponse() { Movies = searchResult.Take(count), TotalResults = searchResult.Count() };
         }
 
         private string GetCacheKey(string q)
