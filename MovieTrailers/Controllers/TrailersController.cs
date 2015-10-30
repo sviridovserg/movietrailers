@@ -20,7 +20,7 @@ namespace MovieTrailers.Controllers
 
         public async Task<Response<SearchResponse>> Search(SearchRequest query)
         {
-            Response<SearchResponse> result = null;
+            Response<SearchResponse> result = new Response<SearchResponse>();
             try
             {
                 result.Data = await _movieService.Search(query);
