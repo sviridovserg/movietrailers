@@ -8,10 +8,11 @@
  * Controller that manages search results and paging
  */
 angular.module('movieTrailersApp')
-  .controller('mainCtrl', ['$scope', '$mdDialog', 'trailersService', 'notificationService', function ($scope, $mdDialog, trailersService, notificationService) {
+  .controller('mainCtrl', ['$scope', '$mdDialog', 'trailersService', 'notificationService', '$document', function ($scope, $mdDialog, trailersService, notificationService, $document) {
       $scope.currentPage = 0;
       $scope.pageSize = 20;
       $scope.totalResult = 0;
+      $scope.isLoading = false;
 
       $scope.search = function (query, $event) {
           if ($event.keyCode !== 13) {
@@ -37,15 +38,25 @@ angular.module('movieTrailersApp')
       };
 
       $scope.openVideo = function (selectedMovie) {
-          $mdDialog.show({
-              controller: 'showTrailerCtrl',
-              templateUrl: 'views/showTrailer.html',
-              parent: angular.element(document.body),
-              clickOutsideToClose: true,
-              locals: {
-                  movie: selectedMovie,
-              }
-          });
+          $scope.isLoading = true;
+          trailersService.getTrailer(selectedMovie).then(
+              function (trailer) {
+                  $mdDialog.show({
+                      controller: 'showTrailerCtrl',
+                      templateUrl: 'views/showTrailer.html',
+                      parent: angular.element(document.body),
+                      clickOutsideToClose: true,
+                      locals: {
+                          movie: trailer
+                      }
+                  });
+                  $scope.isLoading = false;
+              },
+              function () {
+                  notificationService.error('Failed to retrieve movie trailer');
+                  $scope.isLoading = false;
+
+              });
       }
 
       $scope.getLastPageIndex = function() {
@@ -53,16 +64,17 @@ angular.module('movieTrailersApp')
       }
 
       function search(query) {
+          $scope.isLoading = true;
           trailersService.search(getSearchQuery(query)).then(function (result) {
               $scope.searchResult = result.movies;
               $scope.totalResult = result.totalResults;
+              $scope.isLoading = false;
           },
           function () {
-              notificationService.error('Failed to retriev results for your request');
+              notificationService.error('Failed to retrieve results for your request');
+              $scope.isLoading = false;
           });
       }
-
-      
 
       function getSearchQuery(queryText) {
           return {

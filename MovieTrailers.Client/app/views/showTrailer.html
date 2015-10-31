@@ -1,14 +1,35 @@
 ﻿<md-dialog aria-label="Show Trailer" class="ws-selection">
-    <md-toolbar>
-        <div class="md-toolbar-tools">
-            <h2>{{movie.title}}</h2>
-            <span flex></span>
-            <md-button class="md-icon-button" ng-click="cancel()">
-                <md-icon md-font-set="material-icons" aria-label="Close"> close </md-icon>
-            </md-button>
+    <div class="video-dialog-header display-flex">
+        <span flex></span>
+        <md-button class="md-icon-button md-mini" ng-click="cancel()">
+            <md-icon md-font-set="material-icons" aria-label="Close"> close </md-icon>
+        </md-button>
+    </div>
+    <md-dialog-content class="video-dialog-content">
+        <div md-layout="column">
+            <div class="video-container display-flex justify-center">
+                <iframe ng-if="!videoUnavailable" class="video" src="{{videoUrl}}" allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" frameborder="no" scrolling="no"></iframe>
+                <div ng-if="videoUnavailable" class="video display-flex justify-center">
+                    <span style="font-size:30px">Video Not Found</span>
+                </div>
+            </div>
+            <div class="display-flex" md-layout="row">
+                <span>
+                    Released: {{movie.year}}
+                </span>
+                <span flex></span>
+                <span class="video-votes">{{'+' + movie.votes}}</span>
+            </div>
+            <md-divider></md-divider>
+            <!--<div md-layout="row">
+                <p>{{movie.description}}</p>
+            </div>-->
+                <md-content class="description" ng-class="{ 'cut': !isDescriptionOpen, 'full':isDescriptionOpen }">
+                    <p>{{movie.description}}</p>
+                    <div ng-if="!isDescriptionOpen" class="display-flex justify-center description-show-more-container">
+                        <a class="description-show-more"  ng-click="showDescription()">SHOW MORE</a>
+                    </div>
+                </md-content>
         </div>
-    </md-toolbar>
-    <md-dialog-content>
-            
     </md-dialog-content>
 </md-dialog>

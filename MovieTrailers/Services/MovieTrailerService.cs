@@ -20,6 +20,12 @@ namespace MovieTrailers.Services
             _appCache = appCache;
         }
 
+        public Task<MovieTrailer> GetTrailer(string sourceId, Source source)
+        {
+            var sourceDataService = _dataServices.Where(ds => ds.Source == source).FirstOrDefault();
+            return sourceDataService.Get(sourceId);
+        }
+
         public async Task<SearchResponse> Search(SearchRequest q)
         {
             List<IEnumerable<Movie>> result = new List<IEnumerable<Movie>>();

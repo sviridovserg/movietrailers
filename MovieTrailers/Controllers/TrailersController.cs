@@ -31,5 +31,19 @@ namespace MovieTrailers.Controllers
             }
             return result;
         }
+
+        public async Task<Response<MovieTrailer>> GetTrailer(string sourceId, Source source)
+        {
+            Response<MovieTrailer> result = new Response<MovieTrailer>();
+            try
+            {
+                result.Data = await _movieService.GetTrailer(sourceId, source);
+            }
+            catch (Exception) 
+            {
+                result.IsError = true;
+            }
+            return result;
+        }
     }
 }

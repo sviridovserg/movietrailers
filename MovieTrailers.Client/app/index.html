@@ -51,13 +51,13 @@
                     </md-whiteframe>-->
                             
                 <md-grid-list md-cols="5" md-cols-sm="1" md-cols-md="2" md-cols-gt-md="3" md-cols-lg="4" md-cols-gt-lg="6"
-                              md-row-height-gt-md="4:3" md-row-height="16:9"
+                               md-row-height-sm="4:3" md-row-height-md="16:9" md-row-height-lg="4:3" md-row-height="1:1"
                               md-gutter="8px" md-gutter-gt-sm="4px">
                     <md-grid-tile ng-repeat="m in searchResult" ng-click="openVideo(m)" class="movie-list-item"
                                   md-rowspan="1"
                                   md-colspan="1"
                                   md-colspan-sm="1">
-                        <div class="movie-list-item-cover-container">
+                        <div class="movie-list-item-cover-container" >
                             <img ng-src="{{m.coverUrl}}" alt="cover" class="movie-list-item-cover" class="movie-list-item-cover">
                             <div class="movie-list-item-play">
                                 <md-icon md-font-set="material-icons">play_circle_outline</md-icon>
@@ -65,23 +65,26 @@
 
                         </div>
 
-                        <md-grid-tile-footer><h3>{{m.title}}</h3></md-grid-tile-footer>
+                        <md-grid-tile-footer><h3 style="color:#000;">{{m.title}}</h3></md-grid-tile-footer>
                     </md-grid-tile>
                 </md-grid-list>
+                
             </md-content>
-                    
+                
           <div layout="row" class="paging-container" ng-if="searchResult.length <= totalResult">
               <div flex></div>
               <div>
-                  <md-button ng-click="prevPage()" ng-disabled="currentPage == 0" class="md-fab md-primary  md-mini" aria-label="Previous" title="Previous">
+                  <md-button ng-click="prevPage()" ng-disabled="isLoading || currentPage == 0" class="md-fab md-primary  md-mini" aria-label="Previous" title="Previous">
                       <md-icon md-font-set="material-icons">keyboard_arrow_left</md-icon>
                   </md-button>
-                  <md-button ng-click="nextPage()" ng-disabled="currentPage == getLastPageIndex()" class="md-fab md-primary md-mini" aria-label="Next" title="Next">
+                  <md-button ng-click="nextPage()" ng-disabled="isLoading || currentPage == getLastPageIndex()" class="md-fab md-primary md-mini" aria-label="Next" title="Next">
                       <md-icon md-font-set="material-icons">keyboard_arrow_right</md-icon>
                   </md-button>
               </div>
           </div>
-                
+          <div class="progress-container" ng-show="isLoading">
+            <md-progress-circular md-mode="indeterminate"></md-progress-circular>
+          </div>    
 
 
     <!-- build:js(.) scripts/vendor.js -->
@@ -91,6 +94,7 @@
     <script src="bower_components/angular-aria/angular-aria.js"></script>
     <script src="bower_components/angular-material/angular-material.js"></script>
     <script src="bower_components/underscore/underscore.js"></script>
+    <script src="bower_components/custom-bootstrap/ui-bootstrap-custom-tpls-0.14.3.js"></script>
     <!-- endbower -->
     
     <!-- endbuild -->

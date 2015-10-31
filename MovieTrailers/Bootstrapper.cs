@@ -22,7 +22,6 @@ namespace MovieTrailers
         {
             var container = new UnityContainer();
 
-            container.RegisterType<IIdGenerator, IdGenerator>();
             container.RegisterType<IMovieDataAccess, YoutubeService>("YoutubeService");
             container.RegisterType<IMovieDataAccess, OMDBService>("OMDBService");
             container.RegisterInstance<IAppCache>(MovieTrailers.DataAccess.AppCache.Instance);

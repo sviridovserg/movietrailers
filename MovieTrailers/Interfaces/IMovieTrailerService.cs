@@ -10,5 +10,6 @@ namespace MovieTrailers.Interfaces
     public interface IMovieTrailerService
     {
         Task<SearchResponse> Search(SearchRequest q);
+        Task<MovieTrailer> GetTrailer(string sourceId, Source source);
     }
 }

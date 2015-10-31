@@ -25,16 +25,27 @@ namespace MovieTrailers.DataAccess.Youtube
         private const int PAGE_SIZE = 50;
 
 
-        //Youtube embedded video
-        //<iframe id="ytplayer" type="text/html" width="640" height="390"  src="http://www.youtube.com/embed/M7lc1UVf-VE?autoplay=1&origin=http://example.com"  frameborder="0"/>
-        private IIdGenerator _idGenerator;
         private IAppCache _appCache;
         
 
-        public YoutubeService(IIdGenerator idGenerator, IAppCache appCache) 
+        public YoutubeService(IAppCache appCache) 
         {
-            _idGenerator = idGenerator;
             _appCache = appCache;
+        }
+
+        public Source Source
+        {
+            get { return Models.Source.Youtube; }
+        }
+
+
+        public async Task<MovieTrailer> Get(string id)
+        {
+            var youtubeService = CreateService();
+            var searchListRequest = youtubeService.Videos.List("snippet,statistics");
+            searchListRequest.Id = id;
+            var searchResult = await searchListRequest.ExecuteAsync();
+            return Convert(searchResult.Items.First());
         }
 
         public async Task<DataSearchResponse> Search(DataSearchRequest q, int count)
@@ -121,12 +132,32 @@ namespace MovieTrailers.DataAccess.Youtube
         {
             return new Movie()
             {
-                Id = _idGenerator.GetId(),
                 SourceId = result.Id.VideoId,
                 Source = Models.Source.Youtube,
                 CoverUrl = result.Snippet.Thumbnails.Default__.Url,
-                Title = result.Snippet.Title,
+                Title = result.Snippet.Title//,
+                //Votes = result.Snippet.
             };
+        }
+
+        private MovieTrailer Convert(Video result)
+        {
+            return new MovieTrailer()
+            {
+                SourceId = result.Id,
+                Source = Models.Source.Youtube,
+                CoverUrl = result.Snippet.Thumbnails.Default__.Url,
+                Title = result.Snippet.Title,
+                Description = result.Snippet.Description,
+                ReleaseYear = result.Snippet.PublishedAt.HasValue ? (int?)result.Snippet.PublishedAt.Value.Year : null,
+                VideoUrl = GetVideoUrl(result.Id),
+                Votes = result.Statistics.LikeCount.GetValueOrDefault()
+            };
+        }
+
+        private string GetVideoUrl(string id)
+        {
+            return "http://www.youtube.com/embed/" + id;
         }
 
         private YouTubeService CreateService()

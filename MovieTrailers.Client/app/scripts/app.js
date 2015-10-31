@@ -11,9 +11,9 @@
 angular
   .module('movieTrailersApp', [
       'ngAnimate',
-    'ngMaterial',
+    'ngMaterial'
   ])
 .constant('appConfig', {
-    serviceUrl: 'http://localhost:9011/MovieTrailers/api/Trailers'
-    //serviceUrl: 'http://localhost:83/MovieTrailers/api/Trailers'
+    //serviceUrl: 'http://localhost:9011/MovieTrailers/api/Trailers'
+    serviceUrl: 'http://localhost:83/MovieTrailers/api/Trailers'
 });
