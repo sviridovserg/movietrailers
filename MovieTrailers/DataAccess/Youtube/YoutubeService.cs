@@ -24,12 +24,13 @@ namespace MovieTrailers.DataAccess.Youtube
         //The restriction of youtube service for pagesize is [4, 50]
         private const int PAGE_SIZE = 50;
 
-
+        private Converter _converter;
         private IAppCache _appCache;
         
 
         public YoutubeService(IAppCache appCache) 
         {
+            _converter = new Converter();
             _appCache = appCache;
         }
 
@@ -38,14 +39,13 @@ namespace MovieTrailers.DataAccess.Youtube
             get { return Models.Source.Youtube; }
         }
 
-
         public async Task<MovieTrailer> Get(string id)
         {
             var youtubeService = CreateService();
             var searchListRequest = youtubeService.Videos.List("snippet,statistics");
             searchListRequest.Id = id;
             var searchResult = await searchListRequest.ExecuteAsync();
-            return Convert(searchResult.Items.First());
+            return _converter.Convert(searchResult.Items.First());
         }
 
         public async Task<DataSearchResponse> Search(DataSearchRequest q, int count)
@@ -62,9 +62,7 @@ namespace MovieTrailers.DataAccess.Youtube
         private async Task RequestSearch(DataSearchRequest q, int count)
         {
             var loadedMoviesCount = GetCachedMovies(q).Count();
-
             int needToLoadPageCount = System.Convert.ToInt32(Math.Ceiling(((double)count - loadedMoviesCount) / PAGE_SIZE));
-
             var youtubeService = CreateService();
             for (int i = 0; i < needToLoadPageCount; i++)
             {
@@ -74,7 +72,7 @@ namespace MovieTrailers.DataAccess.Youtube
                 searchListRequest.Type = "video";
                 searchListRequest.PageToken = GetNextPageToken(q);
                 var searchResult = await searchListRequest.ExecuteAsync();
-                var movies = searchResult.Items.Select(Convert);
+                var movies = searchResult.Items.Select(_converter.Convert);
                 AddMoviesToCache(q.Query, movies, searchResult.PageInfo.TotalResults.GetValueOrDefault(0) , searchResult.NextPageToken);
             }
         }
@@ -126,38 +124,6 @@ namespace MovieTrailers.DataAccess.Youtube
                 return query;
             }
             return query + " trailer";
-        }
-
-        private Movie Convert(SearchResult result)
-        {
-            return new Movie()
-            {
-                SourceId = result.Id.VideoId,
-                Source = Models.Source.Youtube,
-                CoverUrl = result.Snippet.Thumbnails.Default__.Url,
-                Title = result.Snippet.Title//,
-                //Votes = result.Snippet.
-            };
-        }
-
-        private MovieTrailer Convert(Video result)
-        {
-            return new MovieTrailer()
-            {
-                SourceId = result.Id,
-                Source = Models.Source.Youtube,
-                CoverUrl = result.Snippet.Thumbnails.Default__.Url,
-                Title = result.Snippet.Title,
-                Description = result.Snippet.Description,
-                ReleaseYear = result.Snippet.PublishedAt.HasValue ? (int?)result.Snippet.PublishedAt.Value.Year : null,
-                VideoUrl = GetVideoUrl(result.Id),
-                Votes = result.Statistics.LikeCount.GetValueOrDefault()
-            };
-        }
-
-        private string GetVideoUrl(string id)
-        {
-            return "http://www.youtube.com/embed/" + id;
         }
 
         private YouTubeService CreateService()

@@ -43,6 +43,27 @@ body {
      background: #ff8a80;
 }
 
+.app .search-query-input
+{
+    background-color:white; 
+    padding-bottom:2px;
+}
+
+.app .search-query-input input
+{
+    background-color:white; 
+    margin-right:25px; 
+    border-bottom:0px
+}
+
+    .app .search-query-input md-icon
+    {
+        color:gray;
+        left:initial;
+        left:auto;
+        right:2px;
+    }
+
 .app .movie-list-item-cover-container {
     position:relative;
 }
@@ -100,6 +121,7 @@ body {
         font-size: 60px;
         width: 60px;
         height: 60px;
+        margin: 0;
     }
 
 .app .progress-container
@@ -215,7 +237,10 @@ background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 1
 /* The animation code */
 @keyframes expand {
     from {height: 60px;}
-    to {height: initial;}
+    to {
+        height: initial;
+        height: auto;
+    }
 }
 
 .app .description.full

@@ -26,30 +26,18 @@
       <div ng-controller="mainCtrl" class="stretch" style="box-sizing:border-box;">
           <md-toolbar >
                 <div class="md-toolbar-tools">
-                    <!--<md-button class="md-icon-button" aria-label="Settings">
-                        <md-icon md-font-set="material-icons" > menu </md-icon>
-                    </md-button>-->
                     <h2>
-                        <span>Search Movie Trailers</span>
+                        <span>Search Trailers</span>
                     </h2>
                     <div layout="row" style="margin-left:5px">
-                        <md-input-container style="background-color:white; padding-bottom:2px">
-                            <input ng-model="query" ng-keydown="search(query, $event)" style="background-color:white; margin-right:25px; border-bottom:0px">
-                            <md-icon md-font-set="material-icons" style="color:gray;left:initial;right:2px;">search</md-icon>
+                        <md-input-container class="search-query-input" >
+                            <input ng-model="query" ng-keydown="search(query, $event)" >
+                            <md-icon md-font-set="material-icons">search</md-icon>
                         </md-input-container>
                     </div>
                 </div>
             </md-toolbar>
-
-            
             <md-content class="md-padding move-list">
-                    <!--<md-whiteframe ng-repeat="i in searchResult" class="md-whiteframe-3dp md-margin md-padding" layout layout-align="left center">
-                        <div layout="row">
-                            <img ng-src="{{i.coverUrl}}" alt="cover" style="height:100px" class="md-avatar">
-                        <span>{{i.title}}</span>
-                    </div>
-                    </md-whiteframe>-->
-                            
                 <md-grid-list md-cols="5" md-cols-sm="1" md-cols-md="2" md-cols-gt-md="3" md-cols-lg="4" md-cols-gt-lg="6"
                                md-row-height-sm="4:3" md-row-height-md="16:9" md-row-height-lg="4:3" md-row-height="1:1"
                               md-gutter="8px" md-gutter-gt-sm="4px">
@@ -58,7 +46,7 @@
                                   md-colspan="1"
                                   md-colspan-sm="1">
                         <div class="movie-list-item-cover-container" >
-                            <img ng-src="{{m.coverUrl}}" alt="cover" class="movie-list-item-cover" class="movie-list-item-cover">
+                            <img  ng-src="{{m.coverUrl}}" alt="cover" class="movie-list-item-cover" class="movie-list-item-cover">
                             <div class="movie-list-item-play">
                                 <md-icon md-font-set="material-icons">play_circle_outline</md-icon>
                             </div>
