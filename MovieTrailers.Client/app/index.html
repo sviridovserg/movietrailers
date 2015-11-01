@@ -31,9 +31,28 @@
                     </h2>
                     <div layout="row" style="margin-left:5px">
                         <md-input-container class="search-query-input" >
-                            <input ng-model="query" ng-keydown="search(query, $event)" >
+                            <input ng-model="query" ng-keydown="search($event)" >
                             <md-icon md-font-set="material-icons">search</md-icon>
                         </md-input-container>
+                        <md-button class="md-icon-button md-mini"  ng-click="showYearSelection()" >
+                            <md-icon ng-if="isYearHidden" md-font-set="material-icons" >keyboard_arrow_right</md-icon>
+                            <md-icon ng-if="!isYearHidden" md-font-set="material-icons" >keyboard_arrow_left</md-icon>
+                        </md-button>
+                        
+                    </div>
+
+                    <div layout="row" style="margin-left:5px" class="year-range-input" ng-class="{  'full': !isYearHidden }">
+                        <md-input-container style="padding-bottom:2px; color: rgba(255,255,255,0.87);">
+                            <label ng-if="selectedYear===undefined">Year</label>
+                            <md-select ng-model="selectedYear">
+                               <md-option value="na">
+                                   &nbsp;
+                              </md-option>
+                              <md-option ng-repeat="y in years" value="{{y}}">
+                                {{y}}
+                              </md-option>
+                            </md-select>
+                          </md-input-container>
                     </div>
                 </div>
             </md-toolbar>

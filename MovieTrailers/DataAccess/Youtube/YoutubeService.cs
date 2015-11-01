@@ -64,11 +64,21 @@ namespace MovieTrailers.DataAccess.Youtube
                 searchListRequest.Q = GetTrailersQuery(q.Query);
                 searchListRequest.MaxResults = PAGE_SIZE;
                 searchListRequest.Type = "video";
+                AddSearchParams(searchListRequest, q);
                 searchListRequest.PageToken = _cache.GetNextPageToken(q);
                 var searchResult = await searchListRequest.ExecuteAsync();
                 var movies = searchResult.Items.Select(_converter.Convert);
-                _cache.AddMoviesToCache(q.Query, movies, searchResult.PageInfo.TotalResults.GetValueOrDefault(0) , searchResult.NextPageToken);
+                _cache.AddMoviesToCache(q, movies, searchResult.PageInfo.TotalResults.GetValueOrDefault(0) , searchResult.NextPageToken);
             }
+        }
+
+        private void AddSearchParams(Google.Apis.YouTube.v3.SearchResource.ListRequest request, DataSearchRequest q)
+        {
+            if (!q.Year.HasValue) {
+                return;
+            }
+            request.PublishedAfter = new DateTime(q.Year.Value, 1, 1);
+            request.PublishedBefore = new DateTime(q.Year.Value + 1, 1, 1);
         }
 
         

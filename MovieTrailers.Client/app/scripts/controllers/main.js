@@ -13,9 +13,10 @@ angular.module('movieTrailersApp')
       $scope.pageSize = 20;
       $scope.totalResult = 0;
       $scope.isLoading = false;
+      $scope.isYearHidden = true;
 
-      $scope.search = function (query, $event) {
-          if ($event.keyCode !== 13) {
+      $scope.search = function ($event) {
+          if ($event && $event.keyCode !== 13) {
               return;
           }
           search($scope.query);
@@ -63,7 +64,25 @@ angular.module('movieTrailersApp')
           return Math.ceil($scope.totalResult / $scope.pageSize) - 1;
       }
 
+      $scope.showYearSelection = function () {
+          $scope.isYearHidden = !$scope.isYearHidden;
+      }
+
+      $scope.$watch('selectedYear', function () {
+          if ($scope.selectedYear === "na" || $scope.query == '' || $scope.query == null) {
+              if ($scope.selectedYear === "na") {
+                  $scope.selectedYear = undefined;
+              }
+              return;
+          }
+          search($scope.query)
+      })
+
       function search(query) {
+          if (query == '' || query == null) {
+              notificationService.info('Trailer title should be provided');
+              return;
+          }
           $scope.isLoading = true;
           trailersService.search(getSearchQuery(query)).then(function (result) {
               $scope.searchResult = result.movies;
@@ -78,9 +97,17 @@ angular.module('movieTrailersApp')
 
       function getSearchQuery(queryText) {
           return {
+              year: $scope.selectedYear,
               query: queryText,
               pageIndex: $scope.currentPage,
               pageSize: $scope.pageSize
           };
       }
+
+      var minYear = 1939;
+      function getYears() {
+          return  _.range(minYear, (new Date()).getFullYear()+2).reverse();
+      }
+
+      $scope.years = getYears();
   }]);

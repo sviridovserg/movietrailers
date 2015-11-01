@@ -11,7 +11,13 @@
     }
     function search(searchRequest) {
         var defer = $q.defer();
-        $http.post(appConfig.serviceUrl + "/Search", { Query: searchRequest.query, PageSize: searchRequest.pageSize, PageIndex: searchRequest.pageIndex }).then(
+        $http.post(appConfig.serviceUrl + "/Search",
+            {
+                Query: searchRequest.query,
+                Year: searchRequest.year,
+                PageSize: searchRequest.pageSize,
+                PageIndex: searchRequest.pageIndex
+            }).then(
             function (response) {
                 if (response.data.IsError) {
                     defer.reject();

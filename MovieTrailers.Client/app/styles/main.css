@@ -225,6 +225,21 @@ background: -ms-linear-gradient(bottom, rgba(255,255,255,1) 0%,rgba(255,255,255,
 background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 100%); /* W3C */
 }
 
+.app .year-range-input
+{
+    visibility: hidden;
+}
+
+    .app .year-range-input .md-select-value,
+    .app .year-range-input md-input-container .md-placeholder
+    {
+        color:  rgba(255,255,255,0.87) !important;
+    }
+    .app .year-range-input md-input-container .md-placeholder.md-static
+    {
+        position: absolute;
+    }
+
 .app .description-show-more
 {
     align-self:flex-end;
@@ -243,8 +258,22 @@ background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 1
     }
 }
 
+@keyframes expandYearInput {
+    from {width: 0px;}
+    to {
+        width: 200px;
+    }
+}
+
 .app .description.full
 {
     animation-name: expand;
     animation-duration: 1s;
+}
+
+.app .year-range-input.full
+{
+    animation-name: expandYearInput;
+    animation-duration: 1s;
+    visibility: visible;
 }

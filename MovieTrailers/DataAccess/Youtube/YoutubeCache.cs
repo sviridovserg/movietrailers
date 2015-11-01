@@ -26,7 +26,7 @@ namespace MovieTrailers.DataAccess.Youtube
 
         public IEnumerable<Movie> GetCachedMovies(DataSearchRequest q)
         {
-            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q.Query)) as CacheInfo;
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q)) as CacheInfo;
             if (cachedResult == null)
             {
                 return new List<Movie>();
@@ -36,19 +36,19 @@ namespace MovieTrailers.DataAccess.Youtube
 
         public string GetNextPageToken(DataSearchRequest q)
         {
-            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q.Query)) as CacheInfo;
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q)) as CacheInfo;
             return cachedResult == null ? string.Empty : cachedResult.NextPageToken;
         }
 
         public int GetTotalResults(DataSearchRequest q)
         {
-            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q.Query)) as CacheInfo;
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q)) as CacheInfo;
             return cachedResult == null ? 0 : cachedResult.TotalResults;
         }
 
-        public void AddMoviesToCache(string query, IEnumerable<Movie> movieList, int totalResults, string nextPageToken)
+        public void AddMoviesToCache(DataSearchRequest q, IEnumerable<Movie> movieList, int totalResults, string nextPageToken)
         {
-            CacheInfo cachedResult = _appCache.Get(GetCacheKey(query)) as CacheInfo;
+            CacheInfo cachedResult = _appCache.Get(GetCacheKey(q)) as CacheInfo;
             if (cachedResult == null)
             {
                 cachedResult = new CacheInfo() { Movies = new List<Movie>() };
@@ -56,12 +56,12 @@ namespace MovieTrailers.DataAccess.Youtube
             cachedResult.NextPageToken = nextPageToken;
             cachedResult.TotalResults = totalResults;
             cachedResult.Movies.AddRange(movieList);
-            _appCache.Put(GetCacheKey(query), cachedResult);
+            _appCache.Put(GetCacheKey(q), cachedResult);
         }
 
-        private string GetCacheKey(string q)
+        private string GetCacheKey(DataSearchRequest q)
         {
-            return CAHCE_PREFIX + q;
+            return CAHCE_PREFIX + q.Query + (q.Year.HasValue ? q.Year.Value.ToString() : string.Empty);
         }
 
     }

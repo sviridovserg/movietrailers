@@ -41,7 +41,17 @@ namespace MovieTrailers.DataAccess.OMDB
                 searchResult = await _parser.ParseListResponse(response);
                 _appCache.Put(GetCacheKey(q.Query), searchResult);
             }
+            searchResult = RefineSearch(searchResult, q);
             return new DataSearchResponse() { Movies = searchResult.Take(count), TotalResults = searchResult.Count() };
+        }
+
+        private IEnumerable<Movie> RefineSearch(IEnumerable<Movie> list, DataSearchRequest q)
+        {
+            if (!q.Year.HasValue)
+            {
+                return list;
+            }
+            return list.Where(m => m.ReleaseYear == q.Year.Value);
         }
 
         private string GetCacheKey(string q)
