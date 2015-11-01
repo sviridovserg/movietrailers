@@ -230,6 +230,13 @@ background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 1
     visibility: hidden;
 }
 
+.app .year-range-input md-input-container
+{
+    padding-bottom: 2px;
+    color: rgba(255,255,255,0.87);
+    min-width: 100px;
+}   
+
     .app .year-range-input .md-select-value,
     .app .year-range-input md-input-container .md-placeholder
     {
