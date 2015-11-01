@@ -8,8 +8,10 @@ using MovieTrailers.Models;
 
 namespace MovieTrailers.DataAccess.OMDB
 {
-    class ResponseParser
+    internal class ResponseParser
     {
+        private const string MOVIE_URL_FORMAT = "http://www.imdb.com/video/wab/{0}/imdb/embed";
+
         public Task<MovieTrailer> ParseTrailerResponse(string response)
         {
             return Task.Run<MovieTrailer>(() =>
@@ -17,6 +19,10 @@ namespace MovieTrailers.DataAccess.OMDB
                 XmlDocument doc = new XmlDocument();
                 doc.LoadXml(response);
                 var node = doc.SelectSingleNode("//movie");
+                if (node == null) 
+                {
+                    return null;
+                }
                 MovieTrailer movie = new MovieTrailer();
                 movie.SourceId = node.Attributes["imdbID"].Value;
                 movie.Title = node.Attributes["title"].Value;
@@ -63,6 +69,27 @@ namespace MovieTrailers.DataAccess.OMDB
                     result.Add(movie);
                 }
                 return result;
+            });
+        }
+
+        public Task<string> ParseVideoUrl(string response)
+        {
+            return Task<string>.Run(() =>
+            {
+                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
+                doc.LoadHtml(response);
+
+                var node = doc.DocumentNode.SelectSingleNode("//a[contains(@class,'title-trailer') and @data-video]");
+                if (node == null)
+                {
+                    node = doc.DocumentNode.SelectSingleNode("//a[@data-video]");
+                }
+                if (node == null || node.Attributes["data-video"] == null)
+                {
+                    return string.Empty;
+                }
+                var videoId = node.Attributes["data-video"].Value;
+                return string.Format(MOVIE_URL_FORMAT, videoId);
             });
         }
     }

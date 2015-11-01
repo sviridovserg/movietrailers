@@ -2,7 +2,7 @@
 
 namespace MovieTrailers.DataAccess.Interfaces
 {
-    public interface IAppCache
+    internal interface IAppCache
     {
         bool HasData(string key);
         void Put(string key, object value);

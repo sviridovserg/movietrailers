@@ -1,22 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace MovieTrailers.DataAccess.OMDB
 {
-    class OMDBClient
+    internal  class OMDBClient
     {
+        private const string REQUEST_MOVIE_URL = "http://www.omdbapi.com/?plot=short&r=xml&i=";
+        private const string REQUEST_LIST_URL = "http://www.omdbapi.com/?r=xml&type=movie&s=";
+        private const string REQUEST_MOVIE_PAGE_URL = "http://www.imdb.com/title/";
+        
+
         public Task<string> RequestMovieResult(string id)
         {
-            return RequestResult("http://www.omdbapi.com/?plot=short&r=xml&i=" + Uri.EscapeDataString(id));
+            return RequestResult(REQUEST_MOVIE_URL + Uri.EscapeDataString(id));
         }
 
         public Task<string> RequestSearchResult(string query)
         {
-            return RequestResult("http://www.omdbapi.com/?r=xml&type=movie&s=" + Uri.EscapeDataString(query));
+            return RequestResult(REQUEST_LIST_URL + Uri.EscapeDataString(query));
+        }
+
+        public async Task<string> RequestVideoUrl(string id)
+        {
+            return await RequestResult(REQUEST_MOVIE_PAGE_URL + id);
         }
 
         private async Task<string> RequestResult(string uri)
@@ -31,29 +38,6 @@ namespace MovieTrailers.DataAccess.OMDB
                 }
             }
             return result;
-        }
-
-        public async Task<string> GetVideoUrl(string id)
-        {
-            var response = await RequestResult("http://www.imdb.com/title/" + id);
-
-            return await Task<string>.Run(() =>
-            {
-                HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument();
-                doc.LoadHtml(response);
-
-                var node = doc.DocumentNode.SelectSingleNode("//a[contains(@class,'title-trailer') and @data-video]");
-                if (node == null)
-                {
-                    node = doc.DocumentNode.SelectSingleNode("//a[@data-video]");
-                }
-                if (node == null || node.Attributes["data-video"] == null)
-                {
-                    return string.Empty;
-                }
-                var videoId = node.Attributes["data-video"].Value;
-                return "http://www.imdb.com/video/wab/" + videoId + "/imdb/embed";
-            });
         }
     }
 }

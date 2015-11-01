@@ -8,7 +8,7 @@
  * Controller that manages search results and paging
  */
 angular.module('movieTrailersApp')
-  .controller('mainCtrl', ['$scope', '$mdDialog', 'trailersService', 'notificationService', '$document', function ($scope, $mdDialog, trailersService, notificationService, $document) {
+  .controller('mainCtrl', ['$scope', '$mdDialog', 'trailersService', 'notificationService', function ($scope, $mdDialog, trailersService, notificationService) {
       $scope.currentPage = 0;
       $scope.pageSize = 20;
       $scope.totalResult = 0;
@@ -60,7 +60,7 @@ angular.module('movieTrailersApp')
       }
 
       $scope.getLastPageIndex = function() {
-          return Math.ceil($scope.totalResult / $scope.pageSize);
+          return Math.ceil($scope.totalResult / $scope.pageSize) - 1;
       }
 
       function search(query) {

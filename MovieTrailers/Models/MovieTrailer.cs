@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
+﻿
 namespace MovieTrailers.Models
 {
     public class MovieTrailer: Movie
@@ -19,7 +15,6 @@ namespace MovieTrailers.Models
             this.SourceId = m.SourceId;
             this.ReleaseYear = m.ReleaseYear;
             this.Title = m.Title;
-            this.Id = m.Id;
             this.CoverUrl = m.CoverUrl;
         }
     }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using MovieTrailers.Interfaces;
@@ -18,6 +14,7 @@ namespace MovieTrailers.Controllers
             _movieService = movieService;
         }
 
+        [HttpPost]
         public async Task<Response<SearchResponse>> Search(SearchRequest query)
         {
             Response<SearchResponse> result = new Response<SearchResponse>();
@@ -31,7 +28,8 @@ namespace MovieTrailers.Controllers
             }
             return result;
         }
-
+        
+        [HttpGet]
         public async Task<Response<MovieTrailer>> GetTrailer(string sourceId, Source source)
         {
             Response<MovieTrailer> result = new Response<MovieTrailer>();

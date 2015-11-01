@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MovieTrailers.DataAccess.Interfaces
 {
-    public interface IMovieDataAccess
+    internal interface IMovieDataAccess
     {
         Task<DataSearchResponse> Search(DataSearchRequest q, int count);
         Task<MovieTrailer> Get(string id);

@@ -1,0 +1,76 @@
+﻿describe("mainCtrl", function () {
+    var $rootScope,
+        $q,
+        createController,
+        trailerService;
+
+    beforeEach(function () {
+        module('movieTrailersApp');
+    });
+
+    beforeEach(inject(function ($injector) {
+        $rootScope = $injector.get('$rootScope');
+        var $controller = $injector.get('$controller');
+        $q = $injector.get('$q');
+
+        trailerService = {
+            
+        };
+        createController = function () {
+            return $controller('mainCtrl', { '$scope': $rootScope, 'trailersService': trailerService, $mdDialog: {}, notificationService: {}, });
+        };
+    }));
+
+    it('isLoading true when search in process', function () {
+        trailerService.search = function () {
+            var defer = $q.defer();
+            defer.resolve([]);
+            return defer.promise;
+        }
+        var ctrl = createController();
+        expect($rootScope.isLoading).toBe(false);
+        $rootScope.search('q', { keyCode: 13 });
+        expect($rootScope.isLoading).toBe(true);
+        $rootScope.$digest();
+        expect($rootScope.isLoading).toBe(false);
+    });
+
+    it('when nextPage called currentPage increase', function () {
+        trailerService.search = function () { return { then: function () { } }; };
+        var ctrl = createController();
+        expect($rootScope.currentPage).toBe(0);
+        $rootScope.nextPage();
+        expect($rootScope.currentPage).toBe(1);
+    });
+
+    it('when nextPage called currentPage not change if last', function () {
+        trailerService.search = function () { return { then: function () { } }; };
+        var ctrl = createController();
+        $rootScope.totalResult = 40;
+        $rootScope.currentPage = 1;
+        $rootScope.nextPage();
+        expect($rootScope.currentPage).toBe(1);
+    });
+
+    it('when prevPage called currentPage decrease', function () {
+        trailerService.search = function () { return { then: function () { } }; };
+        var ctrl = createController();
+        $rootScope.currentPage = 2;
+        $rootScope.prevPage();
+        expect($rootScope.currentPage).toBe(1);
+    });
+
+    it('when prevPage called currentPage not change if first', function () {
+        trailerService.search = function () { return { then: function () { } }; };
+        var ctrl = createController();
+        $rootScope.currentPage = 0;
+        $rootScope.prevPage();
+        expect($rootScope.currentPage).toBe(0);
+    });
+
+    it('getLastPageIndex should return zero-base last page index', function () {
+        var ctrl = createController();
+        $rootScope.totalResult = 45;
+        expect($rootScope.getLastPageIndex()).toBe(2);
+    });
+});

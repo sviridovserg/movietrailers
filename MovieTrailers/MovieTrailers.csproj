@@ -172,6 +172,7 @@
     <Compile Include="DataAccess\OMDB\OMDBClient.cs" />
     <Compile Include="DataAccess\OMDB\ResponseParser.cs" />
     <Compile Include="DataAccess\Youtube\Converter.cs" />
+    <Compile Include="DataAccess\Youtube\YoutubeCache.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

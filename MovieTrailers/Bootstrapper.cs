@@ -25,7 +25,7 @@ namespace MovieTrailers
             container.RegisterType<IMovieDataAccess, YoutubeService>("YoutubeService");
             container.RegisterType<IMovieDataAccess, OMDBService>("OMDBService");
             container.RegisterInstance<IAppCache>(MovieTrailers.DataAccess.AppCache.Instance);
-            container.RegisterInstance<IMovieTrailerService>(new MovieTrailerService(container.ResolveAll<IMovieDataAccess>(), container.Resolve<IAppCache>()));
+            container.RegisterInstance<IMovieTrailerService>(new MovieTrailerService(container.ResolveAll<IMovieDataAccess>()));
             return container;
         }
     }

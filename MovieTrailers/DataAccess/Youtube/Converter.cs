@@ -7,8 +7,9 @@ using MovieTrailers.Models;
 
 namespace MovieTrailers.DataAccess.Youtube
 {
-    class Converter
+    internal class Converter
     {
+        private const string MOVIE_URL_FORMAT = "http://www.youtube.com/embed/";
         public Movie Convert(SearchResult result)
         {
             return new Movie()
@@ -37,7 +38,7 @@ namespace MovieTrailers.DataAccess.Youtube
 
         private string GetVideoUrl(string id)
         {
-            return "http://www.youtube.com/embed/" + id;
+            return MOVIE_URL_FORMAT + id;
         }
     }
 }

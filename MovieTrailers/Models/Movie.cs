@@ -21,17 +21,9 @@ namespace MovieTrailers.Models
 
         public Source Source { get; set; }
 
-        public string Id { get; set; }
-
         public string Title { get; set; }
 
         public int? ReleaseYear { get; set; }
-
-        //public string Genre { get; set; }
-
-        //public int Rating { get; set; }
-
-        //public string Classification { get; set; }
 
         public string CoverUrl { get; set; }
 
@@ -47,16 +39,12 @@ namespace MovieTrailers.Models
                 return false;
             }
 
-            return Id == obj.Id && Title == obj.Title && ReleaseYear == obj.ReleaseYear /*&& Genre == obj.Genre &&
-                   Rating == obj.Rating &&
-                   Classification == obj.Classification*/;
+            return SourceId == obj.SourceId && Source == obj.Source && Title == obj.Title && ReleaseYear == obj.ReleaseYear;
         }
 
         public override int GetHashCode()
         {
-            return Id.GetHashCode() ^ Title.GetHashCode() ^ ReleaseYear.GetHashCode() /*^ Genre.GetHashCode() ^
-                   Rating.GetHashCode() ^
-                   Classification.GetHashCode()*/;
+            return SourceId.GetHashCode() ^ Source.GetHashCode() ^ Title.GetHashCode() ^ ReleaseYear.GetHashCode();
         }
 
     }

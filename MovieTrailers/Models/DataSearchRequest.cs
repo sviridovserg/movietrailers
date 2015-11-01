@@ -5,7 +5,7 @@ using System.Web;
 
 namespace MovieTrailers.Models
 {
-    public class DataSearchRequest
+    internal class DataSearchRequest
     {
         public string Query { get; set; }
 

@@ -7,7 +7,7 @@ using MovieTrailers.DataAccess.Interfaces;
 
 namespace MovieTrailers.DataAccess
 {
-    public sealed class AppCache : IAppCache
+    internal sealed class AppCache : IAppCache
     {
         private static readonly AppCache _instance = new AppCache(HttpContext.Current.Cache);
 

@@ -1,22 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Web;
-using MovieTrailers.Interfaces;
 using System.Threading.Tasks;
-using MovieTrailers.Models;
-using System.Net.Http;
 using MovieTrailers.DataAccess.Interfaces;
+using MovieTrailers.Models;
 
 namespace MovieTrailers.DataAccess.OMDB
 {
     class OMDBService : IMovieDataAccess
     {
+        private const string CACHE_PREFIX = "omdb";
         private IAppCache _appCache;
         private ResponseParser _parser;
         private OMDBClient _client;
-        private static string CACHE_PREFIX = "omdb";
-
+        
         public OMDBService(IAppCache appCache) 
         {
             _parser = new ResponseParser();
@@ -32,7 +28,7 @@ namespace MovieTrailers.DataAccess.OMDB
         public async Task<MovieTrailer> Get(string id) 
         {
             var movieTrailer = await _parser.ParseTrailerResponse(await _client.RequestMovieResult(id));
-            movieTrailer.VideoUrl = await _client.GetVideoUrl(movieTrailer.SourceId);
+            movieTrailer.VideoUrl =  await _parser.ParseVideoUrl(await _client.RequestVideoUrl(movieTrailer.SourceId));
             return movieTrailer;
         }
 

@@ -1,23 +1,20 @@
-﻿using MovieTrailers.DataAccess.Interfaces;
-using MovieTrailers.Interfaces;
-using MovieTrailers.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
+using MovieTrailers.DataAccess.Interfaces;
+using MovieTrailers.Interfaces;
+using MovieTrailers.Models;
 
 namespace MovieTrailers.Services
 {
-    public class MovieTrailerService: IMovieTrailerService
+    internal class MovieTrailerService : IMovieTrailerService
     {
         private IEnumerable<IMovieDataAccess> _dataServices;
-        private IAppCache _appCache;
 
-        public MovieTrailerService(IEnumerable<IMovieDataAccess> dataServices, IAppCache appCache) 
+        public MovieTrailerService(IEnumerable<IMovieDataAccess> dataServices) 
         {
             _dataServices = dataServices;
-            _appCache = appCache;
         }
 
         public Task<MovieTrailer> GetTrailer(string sourceId, Source source)
@@ -28,6 +25,10 @@ namespace MovieTrailers.Services
 
         public async Task<SearchResponse> Search(SearchRequest q)
         {
+            if (q.PageIndex < 0 || q.PageSize < 0 || string.IsNullOrEmpty(q.Query))
+            {
+                throw new ArgumentException("q", "Search Request is incorrect. PageIndex, PageSize cannot be less than 0, Query cannot be empty.");
+            }
             List<IEnumerable<Movie>> result = new List<IEnumerable<Movie>>();
             int totalCount = 0;
             foreach (var dataService in _dataServices) 
@@ -44,7 +45,7 @@ namespace MovieTrailers.Services
             };
         }
 
-        public IEnumerable<Movie> GetPage(int pageIndex, int pageSize, List<IEnumerable<Movie>> searchResults)
+        private IEnumerable<Movie> GetPage(int pageIndex, int pageSize, List<IEnumerable<Movie>> searchResults)
         {
             int mergeBucketSize = Convert.ToInt32(Math.Ceiling((double)pageSize / searchResults.Count));
             List<Movie> result = new List<Movie>();
