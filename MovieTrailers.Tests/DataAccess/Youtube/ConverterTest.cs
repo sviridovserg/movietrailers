@@ -10,7 +10,7 @@ namespace MovieTrailers.Tests.DataAccess.Youtube
     [TestClass]
     public class ConverterTest
     {
-        private Converter _coverter;
+        private Converter _coverter = new Converter();
 
         private SearchResult GetTestSearchResult() 
         {
@@ -29,7 +29,7 @@ namespace MovieTrailers.Tests.DataAccess.Youtube
         private Video GetTestVideo()
         {
             Video v = new Video() { Id = "id"};
-            ThumbnailDetails thumbnails = new ThumbnailDetails() { Default__ = new Thumbnail() { Url = "TestCovertUrl" } };
+            ThumbnailDetails thumbnails = new ThumbnailDetails() { Default__ = new Thumbnail() { Url = "TestCoverUrl" } };
             v.Snippet = new VideoSnippet() 
             { 
                 Title = "TestTitle", 
