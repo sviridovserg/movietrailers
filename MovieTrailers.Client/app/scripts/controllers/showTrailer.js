@@ -1,5 +1,5 @@
 ﻿angular.module('movieTrailersApp')
-  .controller('showTrailerCtrl', ['$scope', '$mdDialog', '$sce', 'movie', function ($scope, $mdDialog, $sce, movie) {
+  .controller('showTrailerCtrl', ['$scope', '$mdDialog', '$sce', '$timeout', 'movie', function ($scope, $mdDialog, $sce, $timeout, movie) {
       $scope.movie = movie;
       if (movie.videoUrl == '') {
           $scope.videoUnavailable = true;
@@ -12,4 +12,6 @@
       $scope.showDescription = function () {
           $scope.isDescriptionOpen = !$scope.isDescriptionOpen;
       }
+
+      $timeout(function () { $scope.isShareVisible = true }, 2000);
   }]);

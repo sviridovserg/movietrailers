@@ -20,6 +20,14 @@
                 <span flex></span>
                 <span class="video-votes">{{'+' + movie.votes}}</span>
             </div>
+            <div class="display-flex share-buttons" md-layout="row" style="height:30px" ng-class="{ 'visible': isShareVisible }" >
+                <div >
+                     <div fb-like="movie.videoUrl"></div>
+                </div>
+                <div style="margin-left:5px;">
+                      <div tweet="movie.title" tweet-url="movie.videoUrl"></div>
+                </div>
+            </div>
             <md-divider></md-divider>
             <!--<div md-layout="row">
                 <p>{{movie.description}}</p>

@@ -91,7 +91,7 @@
         });
 
         it('notification info is called', function () {
-            expect(notificationService).toHaveBeenCalled();
+            expect(notificationService.info).toHaveBeenCalled();
         });
     }); 
 

@@ -11,7 +11,8 @@
 angular
   .module('movieTrailersApp', [
       'ngAnimate',
-    'ngMaterial'
+    'ngMaterial',
+    'angulike'
   ])
 .constant('appConfig', {
     serviceUrl: 'http://movietrailers.azurewebsites.net/Movies/api/Trailers'

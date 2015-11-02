@@ -284,3 +284,13 @@ background: linear-gradient(to top, rgba(255,255,255,1) 0%,rgba(255,255,255,0) 1
     animation-duration: 1s;
     visibility: visible;
 }
+
+.share-buttons
+{
+    opacity:0;
+}
+
+    .share-buttons.visible
+    {
+        opacity:1;
+    }
