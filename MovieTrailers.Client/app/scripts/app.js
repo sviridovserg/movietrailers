@@ -14,6 +14,6 @@ angular
     'ngMaterial'
   ])
 .constant('appConfig', {
-    //serviceUrl: 'http://localhost:9011/MovieTrailers/api/Trailers'
-    serviceUrl: 'http://localhost:83/MovieTrailers/api/Trailers'
+    serviceUrl: 'http://movietrailers.azurewebsites.net/Movies/api/Trailers'
+    //serviceUrl: 'http://localhost:83/MovieTrailers/api/Trailers'
 });

@@ -1,6 +1,6 @@
 ﻿angular.module('movieTrailersApp').factory('trailersService', ['$http', '$q', 'appConfig', function ($http, $q, appConfig) {
     'use strict';
-    var noPosterUri = "http://ia.media-imdb.com/images/G/01/imdb/images/poster/movie_large-2652508870._V_.png";
+    var noPosterUri = "images/coverNA.png";
     function convertItem(item) {
         return {
             id: item.SourceId,
